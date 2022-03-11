@@ -16,6 +16,9 @@ page
 
 `pandas` - Data Science and Data Analysis module
 
+Either will need to npm install these modules or if using Pycharms `File -> Settings -> Project -> Project Interpreter`
+to add the module
+
 ### WebDriver
 
 This program is compatible with FireFox and will therefore
