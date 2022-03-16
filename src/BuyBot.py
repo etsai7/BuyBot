@@ -4,6 +4,17 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import pandas as pd
 
+def getItemBrand(item):
+    # Grabs the 'a' tag labelled as item-brand
+    itemBrandContainer = item.find("a", {"class": "item-brand"})
+    # Brand name is stored in the image link
+    ''' There are 3 attributes from the img tag
+        'src' = {str} 'https://c1.neweggimages.com/Brandimage_70x28/Brand1314.gif'
+        'title' = {str} 'GIGABYTE'
+        'alt' = {str} 'GIGABYTE'
+    '''
+    return itemBrandContainer.find("img").attrs['title'] if itemBrandContainer else ''
+
 # 1. Open up website: NewEgg directly to gpu link - prob w/ filters intact
 driver = webdriver.Firefox()
 driver.get("https://www.newegg.com/p/pl?N=100007709%20601385735%20601357248%20601357247")
@@ -20,6 +31,7 @@ for item in items.findAll("div"):
     itemData = []
     itemTitle = item.find("a", {"class": "item-title"})
     itemAvailability = item.find("p", {"class": "item-promo"})
+    itemBrand = getItemBrand(item)
 
     status = "Available"
 
@@ -27,14 +39,18 @@ for item in items.findAll("div"):
         status = "Sold Out"
 
     if itemTitle:
+        itemData.append(itemBrand)
         itemData.append(itemTitle.text)
         itemData.append(status)
 
     if itemData:
         itemsProcessed.append(itemData)
 
-df = pd.DataFrame.from_records(itemsProcessed, columns = ["Item Title", "Status"])
+pd.set_option('display.max_rows', 100)
+df = pd.DataFrame.from_records(itemsProcessed, columns = ["Item Brand", "Item Title", "Status"])
 print(df)
+
+
 
 # assert "Python" in driver.title
 # elem = driver.find_element(By.NAME, "q")
@@ -42,7 +58,7 @@ print(df)
 # elem.send_keys("pycon")
 # elem.send_keys(Keys.RETURN)
 # assert "No results found." not in driver.page_source
-driver.close()
+# driver.close()
 
 # 1. Open up website: NewEgg directly to gpu link - prob w/ filters intact
 # 2. Grab all available gpus using Beautiful Soup
