@@ -16,7 +16,8 @@ class ViewsBot:
         # 1. Setup Edge Web Driver and grab the Website
         edgeDriver = Service('Drivers\\edgedriver_win64\\msedgedriver.exe')
         self.edge = webdriver.Edge(service=edgeDriver)
-        self.edge.get('https://www.youtube.com/c/mkbhd/videos')
+        # self.edge.get('https://www.youtube.com/c/mkbhd/videos')
+        self.edge.get('https://www.youtube.com/user/EthosLab/videos')
 
         # 2. Create BeautifulSoup for Html Parser
         self.soup = BeautifulSoup(self.edge.page_source, features="html.parser")
