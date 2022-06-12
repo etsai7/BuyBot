@@ -40,3 +40,38 @@ This program uses the MS Edge Driver which can be on the [Edge Driver](https://d
 
 ## Sources
 [Module and Driver Installation Guide](https://www.geeksforgeeks.org/how-to-install-selenium-in-python/)
+
+## Steps
+1. Download the necessary modules
+2. Create an Edge objects to access urls
+3. Create a `BeautifulSoup` object to obtain html tags
+   - ```python
+     self.soup = BeautifulSoup(self.edge.page_source, features="html.parser")
+     ```
+4. Using `BeautifulSoup`, extract all youtube videos
+   - ```python
+     videos = self.soup.find_all("ytd-grid-video-renderer", {"class": "style-scope ytd-grid-renderer"})
+     ```
+    
+5. For each video, extract the Title and View Count using `.find()` function by providing the tag type and the associated class or id
+    - ```python
+      videoTitle = video.find("a", {"id": "video-title"}).text
+      ```
+6. Tabularize the data using pandas
+    - ```python
+        pd.set_option('display.max_rows', 100)
+        self.df = pd.DataFrame.from_records(videosProcessed, columns=["Title", "Views", "Views Formatted"])
+      ```
+7. Plot out the views per video using plotly
+    - ```python
+      import plotly.express as px
+      titles = self.df.loc[:, "Title"]
+      views = self.df.loc[:, "Views"]
+      fig = px.line(x=titles,
+                     y=views,
+                     title='Video vs View Count',
+                     color_discrete_sequence =['mediumturquoise']*len(self.df),
+                     labels=dict(x="Title", y="Views"))
+
+      fig.show()
+      ```
