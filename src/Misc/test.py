@@ -6,6 +6,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
+import os
+# print (os.path.abspath(os.curdir))
+# print (os.path.abspath(os.curdir))
+
 # driver = webdriver.Chrome('C:/Users/etsai/Downloads/chromedriver_win32')
 # driver = webdriver.Chrome('C:\\Users\\etsai\\Downloads\\chromedriver_win32\\chromedriver.exe')
 # driver.get("https://www.newegg.com/p/pl?N=100007709%20601385735%20601357248%20601357247")
