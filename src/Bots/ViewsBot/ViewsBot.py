@@ -1,9 +1,15 @@
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import pandas as pd
+import plotly.express as px
 
-# Note: If running from Pycharm, will need to Edit Run Configurations and change the Working Directory
-#       to start from /src instead of this current folder
+'''
+ Note: If running from Pycharm, will need to Edit Run Configurations and change the Working Directory
+       to start from /src instead of this current folder
+       
+ Bar Graph API Doc: https://plotly.com/python-api-reference/generated/plotly.express.bar.html
+'''
 class ViewsBot:
 
     def __init__(self):
@@ -36,10 +42,27 @@ class ViewsBot:
             videoMetaData.append(videoViewCountValue)
             videoMetaData.append(videoViewCountFormatted)
 
-            print(videoMetaData)
+            # print(videoMetaData)
             # print(video.find("a", {"id": "video-title"}).text)
 
             videosProcessed.append(videoMetaData)
+
+        # Tabularize the results
+        pd.set_option('display.max_rows', 100)
+        self.df = pd.DataFrame.from_records(videosProcessed, columns=["Title", "Views", "Views Formatted"])
+        print(self.df)
+        self.edge.close()
+
+    def plotData(self):
+        titles = self.df.loc[:, "Title"]
+        views = self.df.loc[:, "Views"]
+        fig = px.line(x=titles,
+                     y=views,
+                     title='Video vs View Count',
+                     color_discrete_sequence =['mediumturquoise']*len(self.df),
+                     labels=dict(x="Title", y="Views"))
+
+        fig.show()
 
     def parseViewCount(self, viewCount=''):
         lastChar = viewCount[len(viewCount)-1]
@@ -53,3 +76,4 @@ class ViewsBot:
 
 viewsBot = ViewsBot()
 viewsBot.processVideos()
+viewsBot.plotData()
